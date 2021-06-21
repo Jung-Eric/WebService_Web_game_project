@@ -12,6 +12,7 @@
             var context2;
 
             document.addEventListener("mousemove", mouseMoveHandler, false);
+            document.addEventListener("mousedown", mouseDownHandler, false);
 
             var backimage = new Image();
             backimage.src = "images/Chess_board_all.png";
@@ -90,6 +91,11 @@
             var posX = 0
             var posY = 0
 
+            var posC = -1
+            var posCX = 0
+            var posCY = 0
+
+            var arr_range = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]];
             //------------------------------------------------------
             //기존 수행
             setInterval(draw,10);
@@ -138,10 +144,56 @@
             function draw() {
                 //context.clearRect(0, 0, 500, 300);
 
+                //클릭 좌표 연산
+                clickMaker();
+
                 drawBackground();
                 draw_chess();
                 writeGuide();
+
+                StepShifter();
+
+                rangeMaker();
                 UI();
+
+
+            }
+
+            function StepShifter(){
+              if (step==3){
+                if (posC != -1){
+                  if ( arr_w.includes(posC) ){
+                    step = 4;
+                  }
+                }
+              }
+              else if (step ==4){
+                if (posC == -1){
+                  step = 3;
+                  arr_range = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]];
+                }
+
+              }
+
+
+            }
+
+            //클릭 좌표를 받아온다.
+            function clickMaker(){
+                if ( ( (posCX >= base_x) && (posCX < base_x+320)) && ( (posCY >= base_y) && (posCY < base_y+480)) ){
+                  //var imp_x = parseInt (posCX-base_x / 80);
+                  var imp_x = parseInt ((posCX-base_x) / 80);
+                  var imp_y = 5 - parseInt ((posCY-base_y) / 80);
+                  posC = (imp_y << 2) + imp_x;
+
+                }
+                else{
+                  posC = -1
+                }
+            }
+
+            function rangeMaker(){
+              
             }
 
             function UI(){
@@ -162,13 +214,27 @@
 
                   }
                 }
-
+              }
+              //터치 한 상태에서 보여준다.
+              if (step==4){
+                var imp_x = posC & 3;
+                var imp_y = 5 - (posC >> 2);
+                context.drawImage(selected[0], base_x+(80*imp_x), base_y+(80*imp_y),80,80);
 
 
               }
             }
 
             function writeGuide() {
+              context.clearRect(100, 0, 500, 30);
+              context.font = "20px Arial";
+              context.textAlign = "center"
+              context.fillStyle = "#0095DD";
+              context.fillText(posCX, 200,18);
+              context.fillText(posCY, 300,18);
+              context.fillText(posC, 400,18);
+
+
               if (step==0){
                 context.drawImage(block_box, 50,50,380,120);
 
@@ -201,6 +267,18 @@
 
             }
 
+            function mouseDownHandler(e){
+              var relativeX = e.clientX - canvas.offsetLeft;
+              var relativeY = e.clientY - canvas.offsetTop;
+              if(relativeX > 0 && relativeX < canvas.width) {
+                if(relativeX > 0 && relativeY < canvas.height){
+                  posCX = relativeX;
+                  posCY = relativeY;
+                }
+                }
+                draw();
+            }
+
             function mouseMoveHandler(e) {
             var relativeX = e.clientX - canvas.offsetLeft;
             var relativeY = e.clientY - canvas.offsetTop;
@@ -209,7 +287,8 @@
                 posX = relativeX;
                 posY = relativeY;
               }
-            }
+              }
+
             }
 
             //초기화 목적
@@ -223,6 +302,8 @@
 
               arr_w = [4,7,5,6,3,0,-1,-1,2,1];
               arr_r = [19,16,18,17,20,23,-1,-1,21,22];
+
+              arr_range = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]];
 
               step = 3;
 
