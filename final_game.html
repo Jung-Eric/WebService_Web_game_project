@@ -216,6 +216,10 @@
                     case 4:
                       d_move();
                       break;
+                    case 5:
+                      b_move();
+                      break;
+
 
                   }
                 }
@@ -665,6 +669,43 @@
 
               }
             }//후계자 이동
+
+
+            function b_move(){
+              range_reset();
+
+              var pos_target = arr_w[5];
+
+              if (pos_target == -1){
+                return;
+              }
+
+              else{
+                for (i = 0;i<4;i++){
+                    var imp_couter = 0;
+                    var imp_sub = pos_target;
+
+                    while(true){
+                      var cal_pos = pos_maker(pos_target,i,arr_w);
+                      imp_counter += 1;
+
+                      if (cal_pos == -1){
+
+                      }
+                      
+
+                    }
+
+
+
+
+
+
+
+
+                    }
+                }
+            }
 
 
 
