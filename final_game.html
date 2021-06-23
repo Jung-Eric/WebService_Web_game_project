@@ -219,6 +219,12 @@
                     case 5:
                       b_move();
                       break;
+                    case 8:
+                      k_move();
+                      break;
+                    case 9:
+                      q_move();
+                      break;
 
 
                   }
@@ -518,6 +524,26 @@
                     return -1;
                   }
                 }
+                if (d == 8){
+
+                  if (pos_x > 0 && pos_y < 5){
+                    pos_x = pos_x-1;
+                    pos_y = pos_y+1;
+                    var ret = (pos_y << 2)+pos_x;
+
+                    if (arr_imp.includes(ret)){
+                      return -1;
+                    }
+                    else{
+                      return ret;
+                    }
+
+                  }
+                  else{
+                    return -1;
+                  }
+
+                }
                 else {
                   return -1;
                 }
@@ -672,40 +698,168 @@
 
 
             function b_move(){
-              range_reset();
+            range_reset();
 
-              var pos_target = arr_w[5];
+            var pos_target = arr_w[5];
 
-              if (pos_target == -1){
-                return;
+
+            if (pos_target == -1){
+              return;
+            }
+            else{
+              for (i = 0;i<4;i++){
+                  //var imp_couter = 0;
+                  var imp_sub = pos_target;
+
+                  while(true){
+                    var cal_pos = pos_maker(imp_sub,2*i+1,arr_w);
+
+                    errors = cal_pos;
+
+                    //imp_counter += 1;
+                    //errors = i;
+                    if (cal_pos == -1){
+                      break;
+                    }
+                    else if (cal_pos != -1){
+                      var check_pos = arr_r.includes(cal_pos);
+                      if (check_pos == true){
+                        var imp_order = arr_r.indexOf(cal_pos);
+                        if (imp_order != 2 && imp_order != 3){
+                          var imp_x = cal_pos & 3;
+                          var imp_y = cal_pos >> 2;
+
+                          arr_range[imp_y][imp_x] = 2;
+                          break;
+                        }
+                        break;
+                      }//안에 있는 경우
+                      else{
+                        imp_sub = cal_pos;
+                        var imp_x = cal_pos & 3;
+                        var imp_y = cal_pos >> 2;
+
+                        arr_range[imp_y][imp_x] = 1;
+                      }//안에 없는 경우
+
+                    }
+
+
+                  }
+
+                  }
+              }
+          }//야수 이동
+
+
+          function k_move(){
+          range_reset();
+
+          var pos_target = arr_w[8];
+
+
+          if (pos_target == -1){
+            return;
+          }
+          else{
+            for (i=0; i<4;i++){
+              var imp_sub = pos_target;
+
+              var cal_pos = [-1,-1,-1,-1];
+              //var cal_real = [-1,-1,-1,-1];
+              var cal_pos2 = [[-1,-1],[-1,-1],[-1,-1],[-1,-1]];
+              for (i = 0; i<4;i++){
+                //일단은 테스트 목적
+                cal_pos[i] = pos_maker(imp_sub,2*i+1,arr_test);
+                //cal_real[i] = pos_maker(imp_sub,2*i+1,arr_w);
+                cal_pos2[i][0] = pos_maker(cal_pos[i],2*i,arr_w);
+                cal_pos2[i][1] = pos_maker(cal_pos[i],2*i+2,arr_w);
+
+                for(j=0;j<2;j++){
+                if (cal_pos2[i][j] == -1){
+
+                }
+                else{
+                  var check_pos = arr_r.includes(cal_pos2[i][j]);
+                  if (check_pos == true){
+                    var imp_order = arr_r.indexOf(cal_pos2[i][j]);
+
+                    if (imp_order != 2 && imp_order != 3){
+                      var imp_x = cal_pos2[i][j] & 3;
+                      var imp_y = cal_pos2[i][j] >> 2;
+
+                      arr_range[imp_y][imp_x] = 2;
+                    }
+
+                  }
+                  else{
+                    var imp_x = cal_pos2[i][j] & 3;
+                    var imp_y = cal_pos2[i][j] >> 2;
+
+                    arr_range[imp_y][imp_x] = 1;
+                  }
+                }
               }
 
-              else{
-                for (i = 0;i<4;i++){
-                    var imp_couter = 0;
-                    var imp_sub = pos_target;
-
-                    while(true){
-                      var cal_pos = pos_maker(pos_target,i,arr_w);
-                      imp_counter += 1;
-
-                      if (cal_pos == -1){
-
-                      }
-                      
-
-                    }
 
 
+              }
+
+            }//4방향 반복문
+
+          }
+        }//기사 동
 
 
+        function q_move(){
+        range_reset();
+
+        var pos_target = arr_w[9];
 
 
+        if (pos_target == -1){
+          return;
+        }
+        else{
+          for (i = 0;i<8;i++){
+              //var imp_couter = 0;
+              var imp_sub = pos_target;
 
+              while(true){
+                var cal_pos = pos_maker(imp_sub,i,arr_w);
 
-                    }
+                //errors = cal_pos;
+
+                //imp_counter += 1;
+                //errors = i;
+                if (cal_pos == -1){
+                  break;
                 }
-            }
+                else if (cal_pos != -1){
+                  var check_pos = arr_r.includes(cal_pos);
+                  if (check_pos == true){
+                    //var imp_order = arr_r.indexOf(cal_pos);
+
+                    var imp_x = cal_pos & 3;
+                    var imp_y = cal_pos >> 2;
+
+                    arr_range[imp_y][imp_x] = 2;
+                    break;
+                  }//안에 있는 경우
+                  else{
+                    imp_sub = cal_pos;
+                    var imp_x = cal_pos & 3;
+                    var imp_y = cal_pos >> 2;
+
+                    arr_range[imp_y][imp_x] = 1;
+                  }//안에 없는 경우
+
+                }
+              }
+
+              }
+          }
+      }//야수 이동
 
 
 
@@ -723,9 +877,9 @@
               ban_r = [-1,-1];
               ban_w = [-1,-1];
 
-              arr_w = [4,7,5,6,3,0,-1,-1,2,1];
+              //arr_w = [4,7,5,6,3,0,-1,-1,2,1];
               arr_test = [-1,-1,-1,-1,-1,-1,-1,-1]
-              //arr_w = [-1,-1,-1,-1,3,0,-1,-1,2,1];
+              arr_w = [-1,-1,-1,-1,3,0,-1,-1,12,1];
               arr_r = [19,16,18,17,20,23,-1,-1,21,22];
 
               arr_range = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]];
